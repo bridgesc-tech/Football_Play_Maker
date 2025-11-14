@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+    <meta name="apple-mobile-web-app-title" content="Football Play Maker"/>
+    <meta name="theme-color" content="#1a1a1a"/>
+    <meta name="description" content="Create, edit, and manage football plays with an interactive play designer"/>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏈</text></svg>"/>
+    <link rel="apple-touch-icon" href="./logo192.png"/>
+    <link rel="manifest" href="./manifest.json"/>
+    <script>
+        if("file:"!==window.location.protocol){
+            const e=document.createElement("script");
+            e.src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js";
+            e.onload=()=>{
+                const e=document.createElement("script");
+                e.src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js";
+                e.onload=()=>{
+                    const e=document.createElement("script");
+                    e.src="./firebase-config.js";
+                    document.head.appendChild(e)
+                };
+                document.head.appendChild(e)
+            };
+            document.head.appendChild(e)
+        }
+    </script>
+    <title>Football Play Maker</title>
+    <script defer="defer" src="./static/js/main.415e15fd.js"></script>
+    <link href="./static/css/main.39903103.css" rel="stylesheet">
+    <style>
+        /* Update Notification Styles */
+        .update-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #ff6600, #ff3300);
+            color: white;
+            padding: 12px 20px;
+            z-index: 10000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.3s ease-out;
+        }
+        .update-banner.hidden {
+            display: none;
+        }
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        .update-banner-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .update-banner-text {
+            font-size: 14px;
+            font-weight: 600;
+            flex: 1;
+            min-width: 200px;
+        }
+        .update-banner-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        @media (max-width: 480px) {
+            .update-banner-content {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .update-banner-text {
+                text-align: center;
+                margin-bottom: 8px;
+            }
+            .update-banner-actions {
+                justify-content: center;
+            }
+            .update-banner-actions button {
+                flex: 1;
+            }
+        }
+        .settings-btn {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            width: 36px;
+            height: 36px;
+            background: rgba(26, 26, 26, 0.8);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            padding: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        .settings-btn:hover {
+            background: rgba(26, 26, 26, 0.9);
+            transform: rotate(90deg) scale(1.1);
+        }
+        .settings-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .settings-modal.hidden {
+            display: none;
+        }
+        .settings-modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        .settings-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .settings-modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .settings-modal-close:hover {
+            color: #000;
+        }
+        .settings-section {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #E1E8ED;
+        }
+        .settings-version-text {
+            font-size: 12px;
+            color: #7F8C8D;
+            text-align: center;
+            margin: 0;
+            font-style: italic;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: #1a1a1a;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #333;
+        }
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #1a1a1a;
+        }
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Update Notification Banner -->
+    <div id="updateBanner" class="update-banner hidden">
+        <div class="update-banner-content">
+            <span class="update-banner-text">🔄 New version available! Click to update.</span>
+            <div class="update-banner-actions">
+                <button id="updateNowBtn" class="btn-primary" style="padding: 6px 12px; font-size: 13px; margin-right: 8px;">Update Now</button>
+                <button id="updateLaterBtn" class="btn-secondary" style="padding: 6px 12px; font-size: 13px;">Later</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Settings Button -->
+    <button id="settingsBtn" class="settings-btn" title="Settings" aria-label="Settings">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"></path>
+        </svg>
+    </button>
+    
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="settings-modal hidden">
+        <div class="settings-modal-content">
+            <div class="settings-modal-header">
+                <h2 style="margin: 0;">Settings</h2>
+                <button class="settings-modal-close" id="closeSettingsModal">&times;</button>
+            </div>
+            <div>
+                <div class="settings-section" style="margin-top: 0;">
+                    <h3 style="margin-bottom: 15px; font-size: 16px; color: #2C3E50;">App Updates</h3>
+                    <button id="checkUpdateBtn" class="btn-primary" style="width: 100%; margin-top: 10px;">
+                        <span id="updateBtnText">🔄 Check for Updates</span>
+                    </button>
+                    <p id="updateStatusText" style="margin-top: 8px; font-size: 12px; color: #7F8C8D; min-height: 20px;"></p>
+                </div>
+                <div class="settings-section">
+                    <p class="settings-version-text" id="versionText">App Version: Loading...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    
+    <script src="./update-manager.js"></script>
+</body>
+</html>
